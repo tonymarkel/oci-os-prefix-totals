@@ -19,4 +19,14 @@ Then open http://localhost:5000
 > This is demonstration code meant to help illustrate how to display 
 > information from OCI that is not readily available in the console. 
 > This code lacks the ability to authenticate and authorize users. 
-> It is not fit to deploy in a production environment.
+> It is not fit to deploy in a production environment. If you want a
+> command-line verision, use the included os-prefix-totals-to-csv.py
+
+## Command Line Utility
+
+There is an included command line utility to dump the onformation to csv:
+```bash
+python os-prefix-totals-to-csv.py --region "<region>" --namespace "<object storage namespace>" --bucket "<bucket name>"
+e.g.:
+python os-prefix-totals-to-csv.py --region "us-ashburn-1" --namespace "idh3ifrjyvlb" --bucket "TrainingData"
+```
