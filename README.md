@@ -8,8 +8,8 @@ Understand the file counts and byte counts for each prefix in an object storage 
 ```bash
 git clone https://github.com/tonymarkel/oci-os-prefix-totals
 cd oci-os-prefix-totals
-python -m venv app
-source app/bin/activate
+python -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 python app.py
 ```
