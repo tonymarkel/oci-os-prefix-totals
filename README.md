@@ -6,10 +6,11 @@ Understand the file counts and byte counts for each prefix in an object storage 
 * Python >= 3.9
 ## Use
 ```bash
-git clone https://github.com/tonymarkel/oci-os-prefix-analyzer
-cd oci-os-prefix-analyzer
+git clone https://github.com/tonymarkel/oci-os-prefix-totals
+cd oci-os-prefix-totals
 python -m venv app
 source app/bin/activate
+pip install -r requirements.txt
 python app.py
 ```
 Then open http://localhost:5000
