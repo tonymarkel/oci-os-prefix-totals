@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results for {{ bucket_name }}</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f7f9; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 20px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        h1 { color: #1a2b4d; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        .info { background-color: #e9f4ff; border-left: 5px solid #007bff; padding: 15px; margin: 20px 0; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+        th, td { text-align: left; padding: 15px; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; font-weight: 600; color: #333; }
+        /* Style for clickable headers */
+        th.sortable { cursor: pointer; user-select: none; position: relative; }
+        th.sortable:hover { background-color: #e9ecef; }
+        /* Arrows for sort direction */
+        th.sortable::after { content: ''; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); border: 5px solid transparent; opacity: 0.5; }
+        th.sort-asc::after { border-bottom-color: #333; }
+        th.sort-desc::after { border-top-color: #333; }
+        tr:hover { background-color: #f1f1f1; }
+        td:last-child, th:last-child { text-align: right; }
+        .error { color: #d9534f; background-color: #f2dede; border: 1px solid #ebccd1; padding: 20px; border-radius: 8px; }
+        a.back-link { display: inline-block; margin-top: 25px; background-color: #6c757d; color: white; padding: 10px 18px; text-decoration: none; border-radius: 8px; transition: background-color 0.3s; }
+        a.back-link:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Report</h1>
+        
+        <div class="info">
+            <strong>Bucket:</strong> {{ bucket_name }} <br>
+            <strong>Region:</strong> {{ region }} <br>
+            <strong>Namespace:</strong> {{ namespace }}
+        </div>
+
+        {% if error %}
+            <div class="error">
+                <h2>An Error Occurred</h2>
+                <p>{{ error }}</p>
+            </div>
+        {% elif results %}
+            <!-- Added id="resultsTable" for easy selection in JS -->
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <!-- Added classes and data attributes for sorting logic -->
+                        <th class="sortable" data-column-index="0" data-column-type="text">Prefix</th>
+                        <th class="sortable" data-column-index="1" data-column-type="number">Number of Files</th>
+                        <th class="sortable" data-column-index="2" data-column-type="number">Total Size (Bytes)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in results %}
+                    <tr>
+                        <td>{{ row.prefix }}</td>
+                        <td>{{ "{:,}".format(row.file_count) }}</td>
+                        <td>{{ "{:,}".format(row.total_size_bytes) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        
+        <a href="/" class="back-link">Run New Analysis</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const table = document.getElementById('resultsTable');
+            if (!table) return;
+
+            const headers = table.querySelectorAll('th.sortable');
+            
+            headers.forEach(header => {
+                header.addEventListener('click', () => {
+                    const columnIndex = parseInt(header.dataset.columnIndex);
+                    const columnType = header.dataset.columnType;
+                    const isAsc = header.classList.contains('sort-asc');
+                    
+                    // Sort the table
+                    sortTableByColumn(table, columnIndex, columnType, !isAsc);
+                    
+                    // Reset other headers
+                    headers.forEach(h => {
+                        h.classList.remove('sort-asc', 'sort-desc');
+                    });
+
+                    // Set current header's sort direction class
+                    header.classList.toggle('sort-asc', !isAsc);
+                    header.classList.toggle('sort-desc', isAsc);
+                });
+            });
+        });
+
+        /**
+         * Sorts an HTML table by a specific column.
+         * @param {HTMLTableElement} table The table to sort.
+         * @param {number} columnIndex The index of the column to sort by.
+         * @param {string} type The data type of the column ('text' or 'number').
+         * @param {boolean} asc Determines whether to sort in ascending order.
+         */
+        function sortTableByColumn(table, columnIndex, type, asc) {
+            const tBody = table.tBodies[0];
+            const rows = Array.from(tBody.querySelectorAll('tr'));
+            const directionModifier = asc ? 1 : -1;
+
+            const sortedRows = rows.sort((a, b) => {
+                const aText = a.cells[columnIndex].textContent.trim();
+                const bText = b.cells[columnIndex].textContent.trim();
+
+                switch (type) {
+                    case 'number':
+                        // Remove commas before converting to a number
+                        const aNum = parseFloat(aText.replace(/,/g, ''));
+                        const bNum = parseFloat(bText.replace(/,/g, ''));
+                        return (aNum - bNum) * directionModifier;
+                    case 'text':
+                    default:
+                        // Use localeCompare for proper string comparison
+                        return aText.localeCompare(bText) * directionModifier;
+                }
+            });
+
+            // Remove all existing rows from the table
+            while (tBody.firstChild) {
+                tBody.removeChild(tBody.firstChild);
+            }
+
+            // Re-add the newly sorted rows
+            tBody.append(...sortedRows);
+        }
+    </script>
+</body>
+</html>

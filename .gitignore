@@ -1,0 +1,80 @@
+# Byte-compiled / optimized / compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.manifest
+*.pex
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.cache/
+.pytest_cache/
+.coverage
+.coverage.*
+.hypothesis/
+htmlcov/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Sphinx documentation
+docs/_build/
+
+# PyInstaller
+*.spec
+build/
+dist/
+
+# Virtual environment
+.env/
+venv/
+env/
+/bin/
+/include/
+/lib/
+/share/
+/local/
+
+# Editors and IDEs
+.project
+.settings
+.vscode/
+.idea/
+*.sublime-workspace
+*.komodoproject
+*.tmproj
+*.bak
+*.swp
+*~.nib
+local.xml
+
+# OS generated files
+.DS_Store
+.Trashes
+Thumbs.db
+ehthumbs.db

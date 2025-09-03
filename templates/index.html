@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCI Bucket Analyzer</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f7f9; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; position: relative; }
+        h1 { color: #1a2b4d; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: #555; }
+        input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; transition: border-color 0.3s; }
+        input[type="text"]:focus { border-color: #007bff; outline: none; }
+        button { background-color: #007bff; color: white; padding: 14px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600; width: 100%; transition: background-color 0.3s; }
+        button:hover { background-color: #0056b3; }
+        
+        /* Throbber/Spinner Styles */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #007bff; /* Blue */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OCI Bucket Analyzer</h1>
+        <form id="analysisForm" action="/" method="POST">
+            <div class="form-group">
+                <label for="region">Region</label>
+                <input type="text" id="region" name="region" placeholder="e.g., us-ashburn-1" required>
+            </div>
+            <div class="form-group">
+                <label for="namespace">Namespace</label>
+                <input type="text" id="namespace" name="namespace" placeholder="e.g., idh3ifronvlb" required>
+            </div>
+            <div class="form-group">
+                <label for="bucket">Bucket Name</label>
+                <input type="text" id="bucket" name="bucket" placeholder="e.g., datasync" required>
+            </div>
+            <button type="submit">Analyze Bucket</button>
+        </form>
+    </div>
+
+    <!-- Throbber HTML -->
+    <div class="loader-overlay" id="loader">
+        <div class="loader"></div>
+    </div>
+
+    <script>
+        document.getElementById('analysisForm').addEventListener('submit', function() {
+            // Show the loader when the form is submitted
+            document.getElementById('loader').style.display = 'flex';
+        });
+    </script>
+</body>
+</html>
