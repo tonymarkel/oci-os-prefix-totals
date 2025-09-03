@@ -24,7 +24,7 @@ Then open http://localhost:5000
 
 ## Command Line Utility
 
-There is an included command line utility to dump the onformation to csv:
+There is an included command line utility to dump the information to csv:
 ```bash
 python os-prefix-totals-to-csv.py --region "<region>" --namespace "<object storage namespace>" --bucket "<bucket name>"
 e.g.:
